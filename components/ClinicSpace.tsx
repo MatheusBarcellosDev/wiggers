@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useRef } from "react";
 import { BrandMark } from "@/components/BrandMark";
+import { MobileCarousel } from "@/components/MobileCarousel";
 import { clinicSpace } from "@/lib/content";
 import { onceInView, prefersReducedMotion, revealEase } from "@/lib/motion";
 
@@ -55,6 +56,7 @@ export function ClinicSpace() {
   );
 
   const [hero, mid, detail] = clinicSpace.images;
+  const slides = [hero, mid, detail];
 
   return (
     <section
@@ -70,10 +72,35 @@ export function ClinicSpace() {
           <p className="type-lede mt-4 text-ink-soft">{clinicSpace.lede}</p>
         </div>
 
-        <div className="mt-14 grid gap-4 md:grid-cols-12 md:gap-5 md:items-stretch">
+        {/* Mobile: carrossel */}
+        <div className="mt-10">
+          <MobileCarousel ariaLabel="Fotos do consultório">
+            {slides.map((image) => (
+              <figure
+                key={image.src}
+                data-space-frame
+                className="relative aspect-[4/5] overflow-hidden bg-mint-soft"
+              >
+                <Image
+                  data-space-photo
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  className="object-cover will-change-transform"
+                  sizes="82vw"
+                  loading="lazy"
+                  quality={75}
+                />
+              </figure>
+            ))}
+          </MobileCarousel>
+        </div>
+
+        {/* Desktop: composição editorial */}
+        <div className="mt-14 hidden gap-4 md:grid md:grid-cols-12 md:gap-5 md:items-stretch">
           <figure
             data-space-frame
-            className="relative aspect-[4/5] overflow-hidden bg-mint-soft md:col-span-7 md:aspect-auto md:min-h-[28rem]"
+            className="relative col-span-7 min-h-[28rem] overflow-hidden bg-mint-soft"
           >
             <Image
               data-space-photo
@@ -81,16 +108,16 @@ export function ClinicSpace() {
               alt={hero.alt}
               fill
               className="object-cover will-change-transform"
-              sizes="(max-width: 768px) 100vw, 58vw"
+              sizes="58vw"
               loading="lazy"
               quality={75}
             />
           </figure>
 
-          <div className="grid gap-4 md:col-span-5 md:grid-rows-2">
+          <div className="col-span-5 grid grid-rows-2 gap-4">
             <figure
               data-space-frame
-              className="relative aspect-[5/4] overflow-hidden bg-mint-soft md:aspect-auto md:min-h-0"
+              className="relative min-h-0 overflow-hidden bg-mint-soft"
             >
               <Image
                 data-space-photo
@@ -98,14 +125,14 @@ export function ClinicSpace() {
                 alt={mid.alt}
                 fill
                 className="object-cover will-change-transform"
-                sizes="(max-width: 768px) 100vw, 38vw"
+                sizes="38vw"
                 loading="lazy"
                 quality={75}
               />
             </figure>
             <figure
               data-space-frame
-              className="relative aspect-[5/4] overflow-hidden bg-mint-soft md:aspect-auto md:min-h-0"
+              className="relative min-h-0 overflow-hidden bg-mint-soft"
             >
               <Image
                 data-space-photo
@@ -113,7 +140,7 @@ export function ClinicSpace() {
                 alt={detail.alt}
                 fill
                 className="object-cover will-change-transform"
-                sizes="(max-width: 768px) 100vw, 38vw"
+                sizes="38vw"
                 loading="lazy"
                 quality={75}
               />

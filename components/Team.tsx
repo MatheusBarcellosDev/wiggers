@@ -6,10 +6,38 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useRef } from "react";
 import { BrandMark } from "@/components/BrandMark";
+import { MobileCarousel } from "@/components/MobileCarousel";
 import { team } from "@/lib/content";
 import { onceInView, prefersReducedMotion, revealEase } from "@/lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+function MemberCard({
+  member,
+}: {
+  member: (typeof team)[number];
+}) {
+  return (
+    <article data-team-card>
+      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-mint-soft to-[#dff3ec]">
+        <Image
+          data-team-photo
+          src={member.photo}
+          alt={`Retrato de ${member.name}`}
+          fill
+          className="object-contain object-bottom p-2 will-change-transform sm:p-3"
+          sizes="(max-width: 768px) 75vw, (max-width: 1024px) 45vw, 30vw"
+          loading="lazy"
+          quality={80}
+        />
+      </div>
+      <div data-team-meta>
+        <h3 className="type-title-lg mt-4 text-ink">{member.name}</h3>
+        <p className="type-caption mt-1 text-ink-soft">{member.specialty}</p>
+      </div>
+    </article>
+  );
+}
 
 export function Team() {
   const ref = useRef<HTMLElement>(null);
@@ -78,27 +106,23 @@ export function Team() {
           </p>
         </div>
 
-        <ul className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Mobile: carrossel */}
+        <div className="mt-10">
+          <MobileCarousel
+            ariaLabel="Equipe de profissionais"
+            slideClassName="w-[75vw] max-w-[18rem]"
+          >
+            {team.map((member) => (
+              <MemberCard key={`m-${member.name}`} member={member} />
+            ))}
+          </MobileCarousel>
+        </div>
+
+        {/* Desktop: grid */}
+        <ul className="mt-14 hidden gap-x-8 gap-y-12 md:grid md:grid-cols-2 lg:grid-cols-3">
           {team.map((member) => (
-            <li key={member.name} data-team-card>
-              <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-mint-soft to-[#dff3ec]">
-                <Image
-                  data-team-photo
-                  src={member.photo}
-                  alt={`Retrato de ${member.name}`}
-                  fill
-                  className="object-contain object-bottom p-2 will-change-transform sm:p-3"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 30vw"
-                  loading="lazy"
-                  quality={80}
-                />
-              </div>
-              <div data-team-meta>
-                <h3 className="type-title-lg mt-4 text-ink">{member.name}</h3>
-                <p className="type-caption mt-1 text-ink-soft">
-                  {member.specialty}
-                </p>
-              </div>
+            <li key={member.name}>
+              <MemberCard member={member} />
             </li>
           ))}
         </ul>

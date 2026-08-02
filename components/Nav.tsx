@@ -36,7 +36,7 @@ export function Nav() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-5 md:h-20 md:px-8">
-        <a href="#home" className="relative block h-10 w-[150px] shrink-0 md:h-12 md:w-[190px]">
+        <a href="#home" className="relative block h-11 w-[168px] shrink-0 md:h-12 md:w-[190px]">
           <Image
             src="/brand/wiggers-logo-dark.png"
             alt={site.fullName}

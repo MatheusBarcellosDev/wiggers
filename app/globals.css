@@ -45,6 +45,18 @@ html.lenis.lenis-stopped {
   overflow: hidden;
 }
 
+/* Carrossel mobile — esconde scrollbar, mantém scroll-snap */
+.carousel-track {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--color-mint-deep);

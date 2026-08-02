@@ -3,12 +3,96 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
+import { useId, useState, useRef } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import { treatments } from "@/lib/content";
 import { onceInView, prefersReducedMotion, revealEase } from "@/lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+function TreatmentCard({
+  item,
+}: {
+  item: (typeof treatments)[number];
+}) {
+  return (
+    <article className="bg-transparent pt-1">
+      <div
+        data-treat-line
+        className="mb-5 h-px w-full origin-left bg-mint/50"
+        aria-hidden
+      />
+      <div data-treat-card>
+        <h3 className="type-title text-ink">{item.name}</h3>
+        <p className="type-caption mt-3 text-ink-soft">{item.description}</p>
+      </div>
+    </article>
+  );
+}
+
+function TreatmentAccordion({
+  items,
+}: {
+  items: typeof treatments;
+}) {
+  const baseId = useId();
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <ul className="md:hidden">
+      {items.map((item, index) => {
+        const open = openIndex === index;
+        const panelId = `${baseId}-panel-${index}`;
+        const buttonId = `${baseId}-btn-${index}`;
+
+        return (
+          <li key={item.name} data-treat-row className="border-t border-mint/50">
+            <button
+              id={buttonId}
+              type="button"
+              aria-expanded={open}
+              aria-controls={panelId}
+              onClick={() => setOpenIndex(open ? null : index)}
+              className="flex w-full items-center justify-between gap-4 py-4 text-left"
+            >
+              <span className="type-title text-ink">{item.name}</span>
+              <span
+                aria-hidden
+                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center text-mint-deep transition-transform duration-300 ease-out ${
+                  open ? "rotate-45" : ""
+                }`}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path
+                    d="M7 1v12M1 7h12"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+            </button>
+
+            <div
+              id={panelId}
+              role="region"
+              aria-labelledby={buttonId}
+              className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+                open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <p className="type-caption pb-5 pr-10 text-ink-soft">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 export function Treatments() {
   const ref = useRef<HTMLElement>(null);
@@ -20,6 +104,7 @@ export function Treatments() {
       if (!root) return;
 
       const head = root.querySelector<HTMLElement>("[data-treat-head]");
+      const rows = gsap.utils.toArray<HTMLElement>("[data-treat-row]");
       const cards = gsap.utils.toArray<HTMLElement>("[data-treat-card]");
       const lines = gsap.utils.toArray<HTMLElement>("[data-treat-line]");
 
@@ -32,6 +117,16 @@ export function Treatments() {
         tl.from(head, { y: 32, autoAlpha: 0, duration: 0.85 }, 0);
       }
 
+      // Mobile: stagger das linhas do índice
+      if (rows.length) {
+        tl.from(
+          rows,
+          { y: 16, autoAlpha: 0, duration: 0.55, stagger: 0.05 },
+          0.2,
+        );
+      }
+
+      // Desktop: hairlines + cards
       if (lines.length) {
         tl.fromTo(
           lines,
@@ -70,21 +165,13 @@ export function Treatments() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10">
+          <TreatmentAccordion items={treatments} />
+        </div>
+
+        <div className="mt-14 hidden gap-5 md:grid md:grid-cols-2 lg:grid-cols-4">
           {treatments.map((item) => (
-            <article key={item.name} className="bg-transparent pt-5">
-              <div
-                data-treat-line
-                className="mb-5 h-px w-full origin-left bg-mint/50"
-                aria-hidden
-              />
-              <div data-treat-card>
-                <h3 className="type-title text-ink">{item.name}</h3>
-                <p className="type-caption mt-3 text-ink-soft">
-                  {item.description}
-                </p>
-              </div>
-            </article>
+            <TreatmentCard key={item.name} item={item} />
           ))}
         </div>
       </div>

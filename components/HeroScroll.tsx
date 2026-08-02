@@ -11,6 +11,10 @@ import { bindScrollVideo, whenVideoReady } from "@/lib/scrollVideo";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const LOGO_SRC = "/brand/wiggers-logo@2x.png";
+const DESKTOP_VIDEO = "/video/wiggers-hero-rotate-scrub.mp4?v=25s";
+const MOBILE_VIDEO = "/video/wiggers-hero-mobile-scrub.mp4?v=1";
+const DESKTOP_FALLBACK = "/video/wiggers-hero-fallback.png";
+const MOBILE_FALLBACK = "/video/wiggers-hero-mobile-fallback.png";
 
 type TunnelPose = {
   autoAlpha: number;
@@ -126,6 +130,8 @@ export function HeroScroll() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  /** null até o mount — evita baixar o vídeo errado no SSR/hidratação. */
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -136,8 +142,27 @@ export function HeroScroll() {
   }, []);
 
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
     if (reducedMotion || videoFailed) setVideoReady(true);
   }, [reducedMotion, videoFailed]);
+
+  const videoSrc =
+    isMobile === null ? null : isMobile ? MOBILE_VIDEO : DESKTOP_VIDEO;
+  const fallbackSrc = isMobile ? MOBILE_FALLBACK : DESKTOP_FALLBACK;
+
+  useEffect(() => {
+    if (!videoSrc || reducedMotion || videoFailed) return;
+    setVideoReady(false);
+    const el = videoRef.current;
+    if (el) el.load();
+  }, [videoSrc, reducedMotion, videoFailed]);
 
   useGSAP(
     () => {
@@ -154,6 +179,7 @@ export function HeroScroll() {
         !logoStart ||
         !logoEnd ||
         !stage ||
+        isMobile === null ||
         reducedMotion ||
         videoFailed
       ) {
@@ -184,6 +210,32 @@ export function HeroScroll() {
         });
 
         const applyPose = (el: HTMLElement, pose: TunnelPose) => {
+          // Mobile: mesma curva do túnel, em 2D suave (Z extremo clipava a hero).
+          if (isMobile) {
+            let y = 0;
+            let scale = 1;
+            let blur = 0;
+            if (pose.z < 0) {
+              const u = Math.min(1, Math.max(0, pose.z / TUNNEL_DEEP.z));
+              y = 32 * u;
+              scale = 1 - 0.08 * u;
+              blur = 4 * u;
+            } else if (pose.z > 0) {
+              const u = Math.min(1, Math.max(0, pose.z / TUNNEL_PAST.z));
+              y = -20 * u;
+              scale = 1 + 0.05 * u;
+              blur = 2.5 * u;
+            }
+            gsap.set(el, {
+              opacity: pose.autoAlpha,
+              z: 0,
+              x: 0,
+              y,
+              scale,
+              filter: `blur(${blur}px)`,
+            });
+            return;
+          }
           gsap.set(el, {
             opacity: pose.autoAlpha,
             z: pose.z,
@@ -193,7 +245,7 @@ export function HeroScroll() {
         };
 
         const syncLayers = (p: number) => {
-          // Hold longo em cada beat — o usuário lê sem pressa.
+          // Timing original da animação (não comprimir no mobile).
           applyPose(logoStart, tunnelRecede(p, 0.03, 0.1));
           if (beats[0]) {
             applyPose(beats[0], tunnelThrough(p, 0.08, 0.18, 0.36, 0.44));
@@ -226,13 +278,14 @@ export function HeroScroll() {
           }
         }
 
-        // Anatomia do playbook (ritmo certo):
-        // pin na hero + pista #hero-scrub alta; tempo = progresso × duração.
+        // Anatomia do playbook: pin + pista.
+        // Mobile: pin até #clinica no topo — só isso muda; animação do texto intacta.
+        const clinica = document.getElementById("clinica");
         const pin = ScrollTrigger.create({
           trigger: hero,
           start: "top top",
-          endTrigger: scrub,
-          end: "bottom bottom",
+          endTrigger: isMobile && clinica ? clinica : scrub,
+          end: isMobile && clinica ? "top top" : "bottom bottom",
           pin: true,
           pinSpacing: false,
           anticipatePin: 1,
@@ -284,10 +337,10 @@ export function HeroScroll() {
         cleanups.splice(0).forEach((fn) => fn());
       };
     },
-    { scope: rootRef, dependencies: [reducedMotion, videoFailed] },
+    { scope: rootRef, dependencies: [reducedMotion, videoFailed, videoSrc, isMobile] },
   );
 
-  const showVideo = !videoFailed && !reducedMotion;
+  const showVideo = !videoFailed && !reducedMotion && videoSrc !== null;
 
   return (
     <div ref={rootRef}>
@@ -300,7 +353,7 @@ export function HeroScroll() {
           {/* Poster estático enquanto o scrub carrega */}
           {showVideo ? (
             <Image
-              src="/video/wiggers-hero-fallback.png"
+              src={fallbackSrc}
               alt=""
               fill
               priority
@@ -312,8 +365,9 @@ export function HeroScroll() {
             />
           ) : null}
 
-          {showVideo ? (
+          {showVideo && videoSrc ? (
             <video
+              key={videoSrc}
               ref={(el) => {
                 videoRef.current = el;
                 el?.setAttribute("webkit-playsinline", "true");
@@ -321,7 +375,7 @@ export function HeroScroll() {
               className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
                 videoReady ? "opacity-100" : "opacity-0"
               }`}
-              src="/video/wiggers-hero-rotate-scrub.mp4?v=25s"
+              src={videoSrc}
               muted
               playsInline
               preload="auto"
@@ -336,7 +390,7 @@ export function HeroScroll() {
             />
           ) : (
             <Image
-              src="/video/wiggers-hero-fallback.png"
+              src={isMobile ? MOBILE_FALLBACK : DESKTOP_FALLBACK}
               alt="Ilustração odontológica Wiggers"
               fill
               className="object-cover"
@@ -345,7 +399,7 @@ export function HeroScroll() {
             />
           )}
 
-          {showVideo && !videoReady ? (
+          {(showVideo && !videoReady) || isMobile === null ? (
             <div
               className="absolute inset-0 z-[1] flex items-center justify-center bg-[#e8f4ef]/55"
               role="status"
@@ -358,20 +412,21 @@ export function HeroScroll() {
           ) : null}
         </div>
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#e8f4ef]/70 via-[#e8f4ef]/25 to-transparent md:from-[#e8f4ef]/55 md:via-[#e8f4ef]/12" />
+        {/* Mobile: véu vertical mais leve no topo. Desktop: véu à esquerda. */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#e8f4ef]/75 via-[#e8f4ef]/25 to-transparent md:bg-gradient-to-r md:from-[#e8f4ef]/70 md:via-[#e8f4ef]/25 md:to-transparent" />
 
-        {/* Zona esquerda (sem o dente): logo grande + frases + CTA */}
-        <div className="relative z-10 flex h-full w-full items-center overflow-visible">
-          <div className="mx-auto flex h-full w-full max-w-6xl items-center px-5 py-28 md:px-8">
+        {/* Mobile: tipografia um pouco abaixo da nav (não colada no topo). */}
+        <div className="relative z-10 flex h-full w-full items-start overflow-visible md:items-center">
+          <div className="mx-auto flex h-full w-full max-w-6xl items-start px-5 pt-[28vh] pb-28 md:items-center md:px-8 md:py-28">
             <div
               ref={stageRef}
-              className="relative w-full max-w-2xl min-h-[300px] translate-x-4 overflow-visible sm:translate-x-8 md:min-h-[380px] md:translate-x-12 lg:max-w-3xl lg:translate-x-16 xl:translate-x-20 [perspective:1400px]"
+              className="relative mx-auto w-full max-w-md min-h-[260px] overflow-visible text-center sm:max-w-lg md:mx-0 md:min-h-[380px] md:max-w-2xl md:translate-x-12 md:text-left lg:max-w-3xl lg:translate-x-16 xl:translate-x-20 [perspective:1400px]"
             >
               <h1 className="sr-only">{site.fullName}</h1>
 
               {/* Logo inicial */}
               <div
-                className={`absolute inset-0 z-[1] flex items-center ${
+                className={`absolute inset-0 z-[1] flex items-start justify-center md:items-center md:justify-start ${
                   reducedMotion ? "hidden" : ""
                 }`}
               >
@@ -387,7 +442,7 @@ export function HeroScroll() {
               {heroBeats.map((beat) => (
                 <div
                   key={beat.title}
-                  className={`absolute inset-0 z-[2] flex items-center ${
+                  className={`absolute inset-0 z-[2] flex items-start justify-center md:items-center md:justify-start ${
                     reducedMotion ? "hidden" : ""
                   }`}
                 >
@@ -397,14 +452,16 @@ export function HeroScroll() {
                     style={{ opacity: 0 }}
                   >
                     <p className="type-display text-ink">{beat.title}</p>
-                    <p className="type-lede mt-4 text-ink-soft">{beat.subtitle}</p>
+                    <p className="type-lede mt-4 text-ink-soft md:mx-0 mx-auto">
+                      {beat.subtitle}
+                    </p>
                   </div>
                 </div>
               ))}
 
               {/* Logo final + CTA */}
               <div
-                className={`absolute inset-0 z-[3] flex items-center ${
+                className={`absolute inset-0 z-[3] flex items-start justify-center md:items-center md:justify-start ${
                   reducedMotion ? "relative inset-auto" : ""
                 }`}
               >
@@ -414,7 +471,7 @@ export function HeroScroll() {
                   style={reducedMotion ? undefined : { opacity: 0 }}
                 >
                   <HeroLogo mark="end" />
-                  <p className="type-lede mt-5 text-ink-soft">
+                  <p className="type-lede mx-auto mt-5 text-ink-soft md:mx-0">
                     Conheça a clínica em Palhoça, tire dúvidas e planeje o
                     cuidado ideal — de segunda a sexta, até 20h.
                   </p>
@@ -438,7 +495,7 @@ export function HeroScroll() {
               href={site.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="type-ui pointer-events-none absolute bottom-8 left-5 z-20 inline-flex rounded-full bg-mint-deep px-5 py-3 text-white transition hover:bg-ink md:bottom-10 md:left-8"
+              className="type-ui pointer-events-none absolute bottom-8 left-1/2 z-20 inline-flex -translate-x-1/2 rounded-full bg-mint-deep px-5 py-3 text-white transition hover:bg-ink md:bottom-10 md:left-8 md:translate-x-0"
               style={{ opacity: 0 }}
             >
               {site.scheduleLabel} no WhatsApp
@@ -462,14 +519,14 @@ export function HeroScroll() {
 
 function HeroLogo({ mark }: { mark: "start" | "end" }) {
   return (
-    <span className="relative block h-28 w-full max-w-[28rem] sm:h-32 sm:max-w-[34rem] md:h-36 md:max-w-[40rem] lg:h-44 lg:max-w-[46rem]">
+    <span className="relative mx-auto block h-28 w-full max-w-[20rem] sm:h-32 sm:max-w-[24rem] md:mx-0 md:h-36 md:max-w-[40rem] lg:h-44 lg:max-w-[46rem]">
       <Image
         src={LOGO_SRC}
         alt={site.fullName}
         fill
-        className="object-contain object-left"
+        className="object-contain object-center md:object-left"
         priority={mark === "start"}
-        sizes="(max-width: 768px) 90vw, 46rem"
+        sizes="(max-width: 768px) 80vw, 46rem"
       />
     </span>
   );

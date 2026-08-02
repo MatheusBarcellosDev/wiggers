@@ -46,6 +46,7 @@ brand/_preview*
 brand/_logo_gen*
 brand/_mark_gen*
 .impeccable/critique/
+public/video/*-source.mp4
 
 # fontes brutas / duplicatas
 public/consultorio/a64e00*
