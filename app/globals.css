@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mint: #7ec8b1;
+  --color-mint-soft: #c8ebe0;
+  --color-mint-deep: #3d8f78;
+  --color-ink: #14201c;
+  --color-ink-soft: #3a4a44;
+  --color-cream: #f4faf7;
+  --color-surface: #ffffff;
+  --color-line: #d7e8e1;
+  --font-display: var(--font-display-face), "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-sans: var(--font-sans-face), "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+/* Lenis owns smooth scroll; native smooth only for reduced-motion / no-Lenis */
+html:not(.lenis) {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.625;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+html.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-mint-deep);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border-radius: 9999px;
+  background: var(--color-mint-deep);
+  color: white;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.skip-link:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-mint) 45%, white);
+  color: var(--color-ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* —— Type roles (DESIGN.md) —— */
+
+.type-display {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 3.35rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.type-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 3.5vw, 3rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.type-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.type-title-lg {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2vw, 1.65rem);
+  font-weight: 500;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.type-lede {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.625;
+  max-width: 65ch;
+}
+
+.type-lede-lg {
+  font-family: var(--font-sans);
+  font-size: clamp(1.125rem, 1.5vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.625;
+  max-width: 65ch;
+}
+
+.type-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.625;
+  max-width: 65ch;
+}
+
+.type-caption {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.625;
+}
+
+.type-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.type-ui {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.type-nav {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+/* Quotes on ink: slightly more leading + tracking for light-on-dark */
+.type-quote {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.hero-spinner {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, var(--color-mint) 35%, transparent);
+  border-top-color: var(--color-mint-deep);
+  animation: hero-spin 0.7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-spinner {
+    animation: none;
+    border-top-color: var(--color-mint-deep);
+    opacity: 0.7;
+  }
+}
+
+@keyframes hero-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

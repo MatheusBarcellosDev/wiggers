@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-label="Wiggers mark">
+  <path
+    d="M48 52
+       C70 34 110 30 148 42
+       C132 58 122 78 124 104
+       C126 132 138 152 156 160
+       C132 172 108 168 92 150
+       C78 134 72 112 58 98
+       C46 86 34 84 28 96"
+    fill="none"
+    stroke="#7EC8B1"
+    stroke-width="16"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <circle cx="168" cy="156" r="7" fill="#7EC8B1" />
+</svg>

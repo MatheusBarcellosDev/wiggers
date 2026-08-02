@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-02T16:20:00.000Z",
+  "title": "Design System: Wiggers Odontologia",
+  "extensions": {
+    "colorMeta": {
+      "mint": {
+        "role": "primary",
+        "displayName": "Fresh Enamel",
+        "canonical": "#7ec8b1",
+        "tonalRamp": [
+          "#1a3d34",
+          "#2a5c4d",
+          "#3d8f78",
+          "#5aad94",
+          "#7ec8b1",
+          "#a3dcc9",
+          "#c8ebe0",
+          "#e8f7f2"
+        ]
+      },
+      "mint-soft": {
+        "role": "primary",
+        "displayName": "Soft Enamel",
+        "canonical": "#c8ebe0",
+        "tonalRamp": [
+          "#3d6b5c",
+          "#5a9a84",
+          "#7ec8b1",
+          "#a3dcc9",
+          "#c8ebe0",
+          "#d9f2ea",
+          "#e8f7f2",
+          "#f4faf7"
+        ]
+      },
+      "mint-deep": {
+        "role": "primary",
+        "displayName": "Trust Teal",
+        "canonical": "#3d8f78",
+        "tonalRamp": [
+          "#0f2a22",
+          "#1a4639",
+          "#2a6b58",
+          "#3d8f78",
+          "#5aad94",
+          "#7ec8b1",
+          "#a3dcc9",
+          "#d9f2ea"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Aririú Ink",
+        "canonical": "#14201c",
+        "tonalRamp": [
+          "#0a100e",
+          "#14201c",
+          "#243530",
+          "#3a4a44",
+          "#5c6e67",
+          "#8a9a93",
+          "#c5d0cb",
+          "#e8eeeb"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "#3a4a44",
+        "tonalRamp": [
+          "#14201c",
+          "#243530",
+          "#3a4a44",
+          "#5c6e67",
+          "#8a9a93",
+          "#aebbb5",
+          "#d0d9d5",
+          "#eef2f0"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Quiet Paper",
+        "canonical": "#f4faf7",
+        "tonalRamp": [
+          "#3d8f78",
+          "#7ec8b1",
+          "#c8ebe0",
+          "#dff3ec",
+          "#e8f4ef",
+          "#f4faf7",
+          "#f9fcfb",
+          "#ffffff"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#d7e8e1",
+          "#e8f4ef",
+          "#f4faf7",
+          "#f7fbf9",
+          "#fafdfc",
+          "#fcfefd",
+          "#feffff",
+          "#ffffff"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Clinic Line",
+        "canonical": "#d7e8e1",
+        "tonalRamp": [
+          "#3d8f78",
+          "#7ec8b1",
+          "#a3dcc9",
+          "#c8ebe0",
+          "#d7e8e1",
+          "#e4f0eb",
+          "#eef6f2",
+          "#f7fbf9"
+        ]
+      },
+      "hero-veil": {
+        "role": "neutral",
+        "displayName": "Hero Veil",
+        "canonical": "#e8f4ef",
+        "tonalRamp": [
+          "#7ec8b1",
+          "#a3dcc9",
+          "#c8ebe0",
+          "#d9f0e8",
+          "#e8f4ef",
+          "#eef7f3",
+          "#f4faf7",
+          "#fafdfc"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines only — Fraunces, tight leading."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles across the one-pager."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Treatment names and team member names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Supporting copy and quotes."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase section eyebrows with wide tracking."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "section-reveal",
+        "value": "gsap power2.out ~0.7–0.9s, y 24–36, stagger 0.06–0.12",
+        "purpose": "Scroll reveals for About, Treatments, Team, Testimonials."
+      },
+      {
+        "name": "hero-scrub",
+        "value": "ScrollTrigger scrub 0.7 + Lenis desktop; tunnel z/scale/blur via playhead",
+        "purpose": "Hero video + logo/phrase tunnel; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "nav-chrome",
+        "value": "transition-all 300ms",
+        "purpose": "Header transparent → cream/blur only after hero (#clinica)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pill CTA — Trust Teal to Aririú Ink on hover.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Primeira consulta</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; background: #3d8f78; color: #ffffff; padding: 14px 24px; border: none; border-radius: 9999px; font-family: Manrope, Segoe UI, sans-serif; font-size: 0.875rem; font-weight: 600; line-height: 1.2; cursor: pointer; transition: background 0.2s ease; } .ds-btn-primary:hover { background: #14201c; } .ds-btn-primary:focus-visible { outline: 2px solid #7ec8b1; outline-offset: 3px; }"
+    },
+    {
+      "name": "Nav Agendar",
+      "kind": "button",
+      "refersTo": "button-nav",
+      "description": "Compact pill in the desktop nav.",
+      "html": "<a class=\"ds-btn-nav\" href=\"#\">Agendar</a>",
+      "css": ".ds-btn-nav { display: inline-flex; align-items: center; background: #3d8f78; color: #ffffff; padding: 8px 16px; border-radius: 9999px; font-family: Manrope, Segoe UI, sans-serif; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: background 0.2s ease; } .ds-btn-nav:hover { background: #14201c; } .ds-btn-nav:focus-visible { outline: 2px solid #7ec8b1; outline-offset: 3px; }"
+    },
+    {
+      "name": "Treatment Item",
+      "kind": "card",
+      "refersTo": "treatment-item",
+      "description": "Flat specialty block — top mint hairline, no card chrome.",
+      "html": "<article class=\"ds-treat\"><h3 class=\"ds-treat-title\">Ortodontia</h3><p class=\"ds-treat-body\">Alinhamento dos dentes e encaixe da mordida.</p></article>",
+      "css": ".ds-treat { border-top: 1px solid color-mix(in srgb, #7ec8b1 50%, transparent); padding-top: 1.25rem; background: transparent; } .ds-treat-title { margin: 0; font-family: Fraunces, Georgia, serif; font-size: 1.25rem; font-weight: 400; color: #14201c; } .ds-treat-body { margin: 0.75rem 0 0; font-family: Manrope, Segoe UI, sans-serif; font-size: 0.875rem; line-height: 1.625; color: #3a4a44; }"
+    },
+    {
+      "name": "Team Portrait",
+      "kind": "card",
+      "refersTo": "team-portrait",
+      "description": "4:5 mint gradient placeholder with large initials.",
+      "html": "<div class=\"ds-team\"><div class=\"ds-team-frame\"><span class=\"ds-team-initials\">NW</span></div><h3 class=\"ds-team-name\">Dra. Nathalie Wiggers</h3><p class=\"ds-team-role\">Ortodontia e Ortopedia</p></div>",
+      "css": ".ds-team { font-family: Manrope, Segoe UI, sans-serif; } .ds-team-frame { aspect-ratio: 4 / 5; display: flex; align-items: flex-end; padding: 1.5rem; background: linear-gradient(to bottom right, #c8ebe0, #dff3ec); } .ds-team-initials { font-family: Fraunces, Georgia, serif; font-size: 3rem; color: color-mix(in srgb, #3d8f78 70%, transparent); transition: color 0.2s ease; } .ds-team:hover .ds-team-initials { color: #3d8f78; } .ds-team-name { margin: 1.25rem 0 0; font-family: Fraunces, Georgia, serif; font-size: 1.5rem; color: #14201c; font-weight: 400; } .ds-team-role { margin: 0.5rem 0 0; font-size: 0.875rem; line-height: 1.625; color: #3a4a44; }"
+    },
+    {
+      "name": "Testimonial Quote",
+      "kind": "custom",
+      "refersTo": "testimonial-block",
+      "description": "Dark-band quote with hairline and mint author.",
+      "html": "<blockquote class=\"ds-quote\"><p class=\"ds-quote-text\">“Atendimento espetacular.”</p><footer class=\"ds-quote-author\">Natália de Souza</footer></blockquote>",
+      "css": ".ds-quote { margin: 0; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1.5rem; color: #f4faf7; } .ds-quote-text { margin: 0; font-family: Manrope, Segoe UI, sans-serif; font-size: 1.125rem; line-height: 1.625; color: rgba(244,250,247,0.85); } .ds-quote-author { margin: 1.5rem 0 0; font-size: 0.875rem; font-weight: 600; color: #7ec8b1; }"
+    },
+    {
+      "name": "Section Eyebrow",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "Uppercase tracking label in Trust Teal.",
+      "html": "<p class=\"ds-eyebrow\">Quem somos</p>",
+      "css": ".ds-eyebrow { margin: 0; font-family: Manrope, Segoe UI, sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #3d8f78; }"
+    },
+    {
+      "name": "Site Nav",
+      "kind": "nav",
+      "refersTo": "button-nav",
+      "description": "Transparent over hero; cream/blur after #clinica.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#clinica\">Clínica</a><a class=\"ds-nav-link\" href=\"#tratamentos\">Tratamentos</a><a class=\"ds-btn-nav\" href=\"#\">Agendar</a></header>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 1.75rem; font-family: Manrope, Segoe UI, sans-serif; } .ds-nav-link { font-size: 0.875rem; font-weight: 500; color: #3a4a44; text-decoration: none; transition: color 0.2s ease; } .ds-nav-link:hover { color: #14201c; } .ds-nav-link:focus-visible { outline: 2px solid #7ec8b1; outline-offset: 3px; } .ds-btn-nav { display: inline-flex; background: #3d8f78; color: #fff; padding: 8px 16px; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; text-decoration: none; } .ds-btn-nav:hover { background: #14201c; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Consultório de Confiança Local",
+    "overview": "O visual é calmo, preciso e acolhedor — clínico-limpo sem frio hospitalar, editorial na tipografia, cinematográfico só onde a hero merece (scroll-scrub + túnel 3D). A marca lidera na zona vazia do vídeo; o restante da página respira em Quiet Paper e tipografia Fraunces/Manrope, convertendo para WhatsApp sem ruído.\n\nProfundidade vem de tom e regra fina, não de sombra. O sistema rejeita template Wix genérico, clínica roxa/neon, layout de dashboard, jornal denso e o default cream+terracota de geração automática.",
+    "keyCharacteristics": [
+      "Mint clínico (Fresh Enamel / Trust Teal) sobre Quiet Paper e Aririú Ink",
+      "Display serifado (Fraunces) + body geométrico (Manrope)",
+      "CTAs em pílula tátil; seções flat com borda line ou hairline mint",
+      "Hero full-bleed com logo grande na área sem o dente; motion respeita prefers-reduced-motion",
+      "Marca (logo + mark) como assinatura recorrente, não decoração solta"
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Trust Teal e Fresh Enamel carregam ação e ênfase; não introduzir um segundo accent (roxo, coral, neon).",
+        "section": "colors"
+      },
+      {
+        "name": "The Quiet Paper Rule",
+        "body": "Fundos claros ficam em cream/surface/mint-soft — nunca cream quente/terracota genérico.",
+        "section": "colors"
+      },
+      {
+        "name": "The Serif Speaks Rule",
+        "body": "Fraunces só em títulos e nomes; nunca em botões ou nav.",
+        "section": "typography"
+      },
+      {
+        "name": "The Label Whisper Rule",
+        "body": "Eyebrows mint + tracking largo; um por bloco, sem pilhas de pills.",
+        "section": "typography"
+      },
+      {
+        "name": "The Empty-Zone Rule",
+        "body": "Na hero, logo e frases vivem na área vazia à esquerda do dente — nunca centrar a marca no meio do molar.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Superfícies em repouso são planas. Não inventar sombra multi-camada ou glow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Pill CTA Rule",
+        "body": "Ação primaria = pílula Trust Teal → hover Aririú Ink. Não usar botões retangulares sólidos como default.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do usar Trust Teal em CTAs e Fresh Enamel em acentos leves.",
+      "Do manter Fraunces nos títulos e Manrope no resto.",
+      "Do colocar marca/copy da hero na zona vazia esquerda.",
+      "Do manter flat-by-default; hairline > sombra.",
+      "Do respeitar prefers-reduced-motion no hero e reveals."
+    ],
+    "donts": [
+      "Don't parecer Wix genérico, dashboard ou broadsheet denso.",
+      "Don't usar roxo/neon, glow, ou cream+terracota “AI default”.",
+      "Don't empilhar pills, stats strips ou cards com sombra na hero.",
+      "Don't inventar segundo accent ou tipografia fora do par Fraunces/Manrope.",
+      "Don't solidificar o header no primeiro tick do scrub da hero."
+    ]
+  }
+}
