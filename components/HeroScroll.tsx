@@ -509,7 +509,7 @@ export function HeroScroll() {
         <div
           id="hero-scrub"
           ref={scrubRef}
-          className="hero-scrub pointer-events-none h-[400vh] md:h-[600vh]"
+          className="hero-scrub pointer-events-none h-[400vh] bg-[#e8f4ef] md:h-[600vh]"
           aria-hidden="true"
         />
       ) : null}
